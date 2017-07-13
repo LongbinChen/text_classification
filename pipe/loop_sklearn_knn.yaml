@@ -1,0 +1,22 @@
+version: 1.0
+jobs:
+  train_sklearn_knn_loop:
+    module: loop_search
+    input: {}
+    output: {}
+    parameters: 
+      loop_parameters:
+        neighbors: "range(8,15)"
+      search_result_file : mnist_le_result
+      template:  
+        module: text_classification::module::sklearn_knn
+        input:
+          train_data: file://text_classification/data/train_data
+          train_label: file://text_classification/data/train_label
+          test_data: file://text_classification/data/test_data
+          test_label: file://text_classification/data/test_label
+        output:
+          model: sklearn_knn_model
+          result: sklearn_knn_result
+        parameters: 
+          neighbors : "%(neighbors)s"

@@ -1,0 +1,36 @@
+
+input: 
+    train_data: 
+        type: text
+        optional: false
+        datafile: true
+    train_label: 
+        type: text
+        optional: false
+        datafile: true
+    test_data: 
+        type: text
+        optional: false
+        datafile: true
+    test_label: 
+        type: text
+        optional: false
+        datafile: true
+output:
+    model:
+        type: sk_knn_pickle
+        optional: false
+        datafile: true
+    result:
+        type: result_text
+        optional: false
+        datafile: true
+ 
+parameters: 
+    neighbors: 
+      type: int
+      default: 11
+
+cmd: python -m  text_classification.module.sklearn_knn --neighbors neighbors train_data train_label test_data test_label model result
+  
+
