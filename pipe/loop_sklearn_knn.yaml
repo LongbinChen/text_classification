@@ -6,10 +6,10 @@ jobs:
     output: {}
     parameters: 
       loop_parameters:
-        neighbors: "range(8,15)"
-      search_result_file : mnist_le_result
+        neighbors: "range(9,11)"
+      search_result_file : result
       template:  
-        module: text_classification::module::sklearn_knn
+        module: text_classification/module/sklearn_knn
         input:
           train_data: file://text_classification/data/train_data
           train_label: file://text_classification/data/train_label

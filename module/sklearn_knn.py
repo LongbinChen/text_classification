@@ -93,14 +93,15 @@ def sklearn_knn(params):
   clf = sklearn.neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
   clf.fit(train_X, train_label)
   y_predicted = clf.predict(test_X)
-
-  result = sklearn.metrics.classification_report(test_label, y_predicted)
-  print result
+  
+  accuracy = sklearn.metrics.accuracy_score(test_label, y_predicted)
   s = pickle.dumps(clf)
   with open(params.model, "w") as model_file:
     model_file.write(s)
+  print("accuracy : ", accuracy)
   with open(params.result, "w") as result_file:
-    result_file.write(result)
+    result_file.write(str(accuracy))
+  
 
   return
 
