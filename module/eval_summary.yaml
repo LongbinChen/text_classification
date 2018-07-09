@@ -1,0 +1,15 @@
+input:
+   result:
+        type: list
+        datafile: true
+
+output:
+    summary:
+        type: file
+        datafile: true
+
+parameters: 
+    dataname:
+        type: string
+
+cmd: python -m text_classification.module.eval_summary --dataname dataname --summary summary result

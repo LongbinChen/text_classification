@@ -1,0 +1,143 @@
+version: 1.0
+includes: [text_classification/pipe/data.yaml]
+
+jobs:
+    split_data:
+        module: text_classification/module/train_val_split
+        input:
+            train_data: train.csv
+        output:
+            train_split: train_split
+            val_split: val_split
+            val_sample_submission: val_sample_submission
+        parameters:
+            weight: 0.8
+
+    LSTM_Glove_100d_1:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.100d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_100d_1.csv
+        parameters:
+            embed_size: 100
+            num_epochs: 2
+
+    LSTM_Glove_100d_2:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.100d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_100d_2.csv
+        parameters:
+            embed_size: 100
+            num_epochs: 2
+            max_features: 40000
+
+    LSTM_Glove_100d_3:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.100d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_100d_3.csv
+        parameters:
+            embed_size: 100
+            num_epochs: 2
+            max_features: 60000
+
+    LSTM_Glove_100d_4:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.100d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_100d_4.csv
+        parameters:
+            embed_size: 100
+            num_epochs: 2
+            max_features: 80000
+
+    LSTM_Glove_100d_5:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.100d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_100d_5.csv
+        parameters:
+            embed_size: 100
+            num_epochs: 2
+            max_features: 100000
+
+    eval_1:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_100d_1.csv
+        output:
+          result: LSTM_Glove_submission_100d_1_result.csv
+        parameters: {}
+    eval_2:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_100d_2.csv
+        output:
+          result: LSTM_Glove_submission_100d_2_result.csv
+        parameters: {}
+    eval_3:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_100d_3.csv
+        output:
+          result: LSTM_Glove_submission_100d_3_result.csv
+        parameters: {}
+
+    eval_4:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_100d_4.csv
+        output:
+          result: LSTM_Glove_submission_100d_4_result.csv
+        parameters: {}
+    eval_5:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_100d_5.csv
+        output:
+          result: LSTM_Glove_submission_100d_5_result.csv
+        parameters: {}
+
+
+
+
+    summary:
+        module: text_classification/module/eval_summary
+        input:
+          result: 
+           - LSTM_Glove_submission_100d_1_result.csv
+           - LSTM_Glove_submission_100d_2_result.csv
+           - LSTM_Glove_submission_100d_3_result.csv
+           - LSTM_Glove_submission_100d_4_result.csv
+           - LSTM_Glove_submission_100d_5_result.csv
+        output:
+          summary: comparison_summary
+        parameters: 
+          dataname: "max_feature_20k,max_feature_40k,max_feature_60k,max_feature_80k,max_feature_100k"
+

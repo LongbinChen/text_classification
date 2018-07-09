@@ -1,0 +1,69 @@
+version: 1.0
+includes: [text_classification/pipe/data.yaml]
+
+jobs:
+    split_data:
+        module: text_classification/module/train_val_split
+        input:
+            train_data: train.csv
+        output:
+            train_split: train_split
+            val_split: val_split
+            val_sample_submission: val_sample_submission
+        parameters:
+            weight: 0.8
+
+    LSTM_Glove_remove_stopwords:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.50d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_val_remove_stopwords.csv
+        parameters:
+            num_epochs: 2
+            loss:  binary_crossentropy
+            remove_stopwords:  True
+
+    eval_LSTM_Glove_remove_stopwords:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_val_remove_stopwords.csv
+        output:
+          result: LSTM_Glove_submission_val_remove_stopwords_result.csv
+
+    LSTM_Glove:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.50d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_val.csv
+        parameters:
+            num_epochs: 2
+            loss:  binary_crossentropy
+
+    eval_LSTM_Glove:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_val.csv
+        output:
+          result: LSTM_Glove_submission_val_result.csv
+        parameters: {}
+    summary:
+        module: text_classification/module/eval_summary
+        input:
+          result: 
+           - LSTM_Glove_submission_val_result.csv
+           - LSTM_Glove_submission_val_remove_stopwords_result.csv
+        output:
+          summary: comparison_summary
+        parameters: 
+          dataname: "with_stop_words,without_stop_words"
+

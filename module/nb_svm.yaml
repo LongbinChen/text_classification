@@ -1,0 +1,25 @@
+
+input:
+    train_data:
+        type: text
+        optional: false
+        datafile: true
+    test_data:
+        type: text
+        optional: false
+        datafile: true
+    sample_submission:
+        type: text
+        optional: false
+        datafile: true
+
+
+output:
+    submission: 
+        type: text
+        optional: false
+        datafile: true
+
+parameters: {}
+
+cmd: python3.6 -m text_classification.module.nb_svm train_data test_data sample_submission submission

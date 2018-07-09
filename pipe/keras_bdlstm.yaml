@@ -1,0 +1,15 @@
+version: 1.0
+includes: [text_classification/pipe/data.yaml]
+jobs:
+    CVxTz_keras_bdlstm:
+        module: text_classification/module/keras_bdlstm
+        input:
+            train_data: train.csv
+            test_data: test.csv
+            sample_submission: sample_submission.csv
+        output:
+            submission: CVxTz_keras_bdlstm_submission.csv
+        parameters:
+            num_epochs: 2
+
+        

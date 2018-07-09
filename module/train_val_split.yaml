@@ -1,0 +1,23 @@
+input:
+   train_data:
+        type: list
+        datafile: true
+
+output:
+    train_split:
+        type: file
+        datafile: true
+    val_split:
+        type: file
+        datafile: true
+
+    val_sample_submission:
+        type: file
+        datafile: true
+
+parameters: 
+    weight:
+        type: float
+        default: 0.8
+
+cmd: python -m text_classification.module.train_val_split --weight weight train_data train_split val_split val_sample_submission

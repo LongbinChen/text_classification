@@ -1,0 +1,45 @@
+
+input:
+    stopwords:
+        type: text
+        optional: false
+        datafile: true
+    category_label:
+        type: text
+        optional: false
+        datafile: true
+    train_data:
+        type: text
+        optional: false
+        datafile: true
+
+output:
+    result:
+        type: directory
+        optional: false
+        datafile: true
+
+parameters:
+    limit_per_category:
+        type: int
+        default: 5000
+    min_word_count:
+        type: int
+        default: 20
+    keep_url:
+        type: bool
+        default: false
+    ngram_max_n:
+        type: int
+        default: 1
+    num_epochs:
+        type: int
+        default: 100
+    tol:
+        type: text
+        default: '1e-3'
+    alpha:
+        type: text
+        default: '1e-5'
+
+cmd: python -m text_classification.module.train_tfidf_lr --limit_per_category limit_per_category --min_word_count min_word_count --keep_url keep_url --ngram_max_n ngram_max_n --num_epochs num_epochs --tol tol --alpha alpha stopwords category_label train_data result

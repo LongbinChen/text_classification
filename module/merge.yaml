@@ -1,0 +1,15 @@
+input:
+   input_submission:
+        type: list
+        datafile: true
+
+output:
+    submission:
+        type: file
+        datafile: true
+
+parameters: 
+    weight:
+        type: string
+
+cmd: python -m text_classification.module.merge --weight weight submission input_submission

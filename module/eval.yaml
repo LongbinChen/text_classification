@@ -1,0 +1,14 @@
+input:
+    ground_truth:
+        type: list
+        datafile: true
+    submission:
+        type: file
+        datafile: true
+output:
+    result:
+        type: file
+        datafile: true
+parameters:  {}
+
+cmd: python -m text_classification.module.eval ground_truth submission result

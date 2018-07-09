@@ -1,0 +1,58 @@
+version: 1.0
+includes: [text_classification/pipe/data.yaml]
+
+jobs:
+
+    LSTM_Glove_100d:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.100d.txt 
+            train_data: train.csv
+            test_data: test.csv
+            sample_submission: sample_submission.csv
+        output:
+            submission: LSTM_Glove_submission_100d.csv
+        parameters:
+            embed_size: 100
+            num_epochs: 3
+    nb_svm:
+        module: text_classification/module/nb_svm
+        input:
+            train_data: train.csv
+            test_data: test.csv
+            sample_submission: sample_submission.csv
+        output:
+            submission: nb_svm_submission.csv
+        parameters: {}
+
+    toxic_avenger:        
+        module: text_classification/module/toxic_avenger
+        input:
+            train_data: train.csv
+            test_data: test.csv
+            previous_submission: nb_svm_submission.csv
+        output:
+           submission: toxic_avenger_submission
+        parameters: {}
+
+    merge_2:        
+        module: text_classification/module/merge
+        input:
+           input_submission:
+             - nb_svm_submission.csv
+             - LSTM_Glove_submission_100d.csv
+        output:
+           submission: merged_submission_2
+        parameters:
+           weight: 0.5,0.5
+
+    toxic_avenger_2:        
+        module: text_classification/module/toxic_avenger
+        input:
+            train_data: train.csv
+            test_data: train.csv
+            previous_submission: merged_submission_2
+        output:
+           submission: toxic_avenger_submission_2
+        parameters: {}
+

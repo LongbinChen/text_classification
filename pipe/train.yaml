@@ -1,0 +1,180 @@
+version: 1.0
+includes: [text_classification/pipe/data.yaml]
+
+jobs:
+    split_data:
+        module: text_classification/module/train_val_split
+        input:
+            train_data: train.csv
+        output:
+            train_split: train_split
+            val_split: val_split
+            val_sample_submission: val_sample_submission
+        parameters:
+            weight: 0.8
+
+
+    CVxTz_keras_bdlstm:
+        module: text_classification/module/keras_bdlstm
+        input:
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: CVxTz_keras_bdlstm_submission_val.csv
+        parameters:
+            num_epochs: 2
+
+    eval_CVxTz_keras_bdlstm:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: CVxTz_keras_bdlstm_submission_val.csv 
+        output:
+          result: result_CVxTz_keras_result 
+  
+    
+    LSTM_Glove:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.50d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_val.csv
+        parameters:
+            num_epochs: 2
+            loss:  binary_crossentropy
+
+    LSTM_Glove_ep3:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.50d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_val_ep3.csv
+        parameters:
+            num_epochs: 3
+            loss:  binary_crossentropy
+
+    GRU_Glove:
+        module: text_classification/module/GRU_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.50d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: GRU_Glove_submission_val.csv
+        parameters:
+            num_epochs: 2
+            loss:  binary_crossentropy
+
+
+    LSTM_Glove_mean_loss:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.50d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_val_mean_loss.csv
+        parameters:
+            num_epochs: 2
+            loss: mean_absolute_error
+
+    eval_GRU_Glove:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: GRU_Glove_submission_val.csv
+        output:
+          result: GRU_Glove_submission_val_result.csv
+
+    eval_LSTM_Glove:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_val.csv
+        output:
+          result: LSTM_Glove_submission_val_result.csv
+
+    eval_LSTM_Glove_ep3:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_val_ep3.csv
+        output:
+          result: LSTM_Glove_submission_val_ep3_result.csv
+
+    eval_LSTM_Glove_mean_loss:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_val_mean_loss.csv
+        output:
+          result: LSTM_Glove_submission_val_result_mean_Loss.csv
+
+
+    LSTM_Glove_100d:
+        module: text_classification/module/LSTM_Glove
+        input:
+            embed_file: local://Users/cf/Downloads/glove.6B.100d.txt
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: LSTM_Glove_submission_100d_val.csv
+        parameters:
+            embed_size: 100
+            num_epochs: 2
+
+    eval_LSTM_Glove_100d:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: LSTM_Glove_submission_100d_val.csv
+        output:
+          result: LSTM_Glove_submission_100d_val_result.csv
+
+
+    nb_svm:
+        module: text_classification/module/nb_svm
+        input:
+            train_data: train_split
+            test_data: val_split
+            sample_submission: val_sample_submission
+        output:
+            submission: nb_svm_submission_val.csv
+        parameters: {}
+
+    eval_nb_svm:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: nb_svm_submission_val.csv
+        output:
+          result: nb_svm_submission_val_result.csv
+
+    merge:
+        module: text_classification/module/merge
+        input:
+           input_submission:
+             - LSTM_Glove_submission_100d_val.csv  
+             - nb_svm_submission_val.csv
+        output:
+           submission: merged_submission
+        parameters:
+           weight: 0.5,0.5
+
+    eval_merge:
+        module: text_classification/module/eval
+        input:
+          ground_truth: val_split
+          submission: merged_submission
+        output:
+          result: merged_submission_result

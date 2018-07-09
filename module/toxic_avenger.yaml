@@ -1,0 +1,25 @@
+
+input:
+    train_data:
+        type: text
+        optional: false
+        datafile: true
+    test_data:
+        type: text
+        optional: false
+        datafile: true
+    previous_submission:
+        type: text
+        optional: false
+        datafile: true
+
+
+output:
+    submission: 
+        type: text
+        optional: false
+        datafile: true
+
+parameters: {}
+
+cmd: python -m text_classification.module.toxic_avenger train_data test_data previous_submission submission

@@ -1,0 +1,49 @@
+
+input:
+    train_data:
+        type: text
+        optional: false
+        datafile: true
+    test_data:
+        type: text
+        optional: false
+        datafile: true
+    embed_file:
+        type: text
+        optional: false
+        datafile: true
+    sample_submission:
+        type: text
+        optional: false
+        datafile: true
+    
+output:
+    submission: 
+        type: text
+        optional: false
+        datafile: true
+
+parameters:
+    embed_size:
+        type: int
+        default: 50
+    batch_size:
+        type: int
+        default: 32
+    num_epochs:
+        type: int
+        default: 100
+    max_features:
+        type: int
+        default: 20000
+    maxlen:
+        type: int
+        default: 100
+    remove_stopwords:
+        type: string
+        default: False
+    loss:
+        type: string
+        default: binary_crossentropy
+
+cmd: python -m text_classification.module.LSTM_Glove --loss loss --embed_size embed_size --batch_size batch_size --num_epochs num_epochs --max_features max_features --maxlen maxlen --remove_stopwords remove_stopwords train_data test_data embed_file sample_submission submission
